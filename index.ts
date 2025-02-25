@@ -52,10 +52,10 @@ async function generateResponse(query: string) {
 
 async function loadContext() {
   const files = fs.readdirSync(DATA_FOLDER);
-  for (const file of files) {
+  await Promise.all(files.map(file => {
     const filePath = path.join(DATA_FOLDER, file);
-    await Utils.loadNovel(filePath, file);
-  }
+    return Utils.loadNovel(filePath, file);
+  }));
 }
 
 app.post("/ask", async (req: Request, res: Response): Promise<void> => {
